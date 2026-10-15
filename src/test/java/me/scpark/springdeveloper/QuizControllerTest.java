@@ -41,11 +41,22 @@ class QuizControllerTest {
         result.andDo(print());
     }
 
-//    @DisplayName("GET /quiz?code=2 이면 응답 코드는 400, 응답 본문은 Bad Request!를 리턴한다.")
-//    @Test
-//    public void getQuiz2() throws Exception {
-//
-//    }
+    @DisplayName("GET /quiz?code=2 이면 응답 코드는 400, 응답 본문은 Bad Request!를 리턴한다.")
+    @Test
+    public void getQuiz2() throws Exception {
+        // 준비 given
+        final String url = "/quiz";
+
+        // 실행 when
+        final ResultActions result = mockMvc.perform(get(url).param("code", "2"));  // GET /quiz?code=1
+
+        // 검증 then
+        result.andExpect(status().isBadRequest()).andExpect(content().string("Bad Request!"));
+
+        // 응답 전체 출력
+        result.andDo(print());
+
+    }
 
     @DisplayName("POST /quiz 요청, 요청 바디에 {'value':1}이면 응답 코드는 403, 응답 본문은 Forbidden!")
     @Test
@@ -63,6 +74,13 @@ class QuizControllerTest {
     @DisplayName("POST /quiz 요청, 요청 바디에 {'value': 2}이면 응답 코드는 200, 응답 본문은 OK!")
     @Test
     public void postQuiz2() throws Exception {
-
+        //준비 given
+        final String url = "/quiz";
+        // 실행 when
+        final ResultActions result = mockMvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new Code(2))));
+        // 검증 then
+        result.andExpect(status().isOk()).andExpect(content().string("OK!"));
     }
 }
